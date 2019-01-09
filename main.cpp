@@ -1,9 +1,19 @@
 #include<bits/stdc++.h>
+<<<<<<< HEAD
 #include<string.h>
 #include "manage.h"
 //#include<SQLAPI.h>
 using namespace std;
 
+=======
+#include<SQLAPI.h>
+using namespace std;
+struct node
+{
+	vector<pair<string, string> >file;
+	vector<pair<node*, string> >folder;
+};
+>>>>>>> 7ef95f07a5e28dadb3be1a789a07d92ba4fd18a0
 int main()
 {
 	node *root=new node;
@@ -26,5 +36,6 @@ int main()
     manage obj;
     cout<<obj.createFile("abc","abc",root)<<endl;
     cout<<obj.createFolder("bcd",root);
+
 	return 0;
 }
