@@ -1,4 +1,3 @@
-
 #ifndef MANAGE_H
 #define MANAGE_H
 #include<bits/stdc++.h>
@@ -8,17 +7,24 @@ struct node
 {
 	vector<pair<string, string> >file;
 	vector<pair<node*, string> >folder;
-	node *dotdot;
 };
 
 class manage
 {
     public:
-        //manage();
         void renameFile(node *root, string oldFileName, string OldFileExtension);
         void renameFolder(node *root, string oldFolderName);
-        bool createFile(string fileName, string fileExtension, node *root);
-        bool createFolder(string folderName, node *root);
+        void createFile(string fileName, string fileExtension, node *root);
+        void createFolder(string folderName, node *root);
+        void list(node *root);
+        void traverse(node * root);
+        void actions()
+        {
+        	cout<<"Create File\tCreate Folder\tRename File\t Rename Folder";
+        }
+        bool checkFile(node * root, string name);
+        bool checkFolder(node * root, string name);
+        
 
     protected:
 
@@ -27,32 +33,51 @@ class manage
 
     		
 };
-bool manage :: createFile(string fileName, string fileExtension, node *root)
+void manage :: createFile(string fileName, string fileExtension, node *root)
 {
 	root->file.push_back(make_pair(fileName,fileExtension));
-	return true;
 }
-bool manage :: createFolder(string folderName, node *root)
+void manage :: createFolder(string folderName, node *root)
 {
 	node *temp = new node;
 	temp=NULL;
-	root->dotdot=root;
 	root->folder.push_back(make_pair(temp, folderName));
-	return true;
 }
 
 void manage :: renameFile(node *root, string oldFileName, string OldFileExtension)
 {
 	vector<pair<string, string> > :: iterator it;
 	int p=0;
+	string newName;
+	bool a=false;
+	cout<<"Enter new name: ";
+	cin>>newName;
+	while(a==false)
+	{
+		for(it=root->file.begin();it!=root->file.end();++it)
+		{
+			if(it->first== newName && it->second==OldFileExtension)
+			{
+				cout<<"File with that name already exist"<<endl;
+				a=true;
+				break;
+			}
+		}
+		if(a==true)
+		{
+			cout<<"Re-enter file name: ";
+			cin>>newName;
+		}
+		else
+		{
+			a=false;
+		}
+	}
 	for(it=root->file.begin();it!=root->file.end();++it)
 	{
 		if(it->first==oldFileName && it->second==OldFileExtension)
 		{
-			cout<<"Enter new name: ";
-			cin>>it->first;
-			cout<<endl<<"Enter  new Extension: ";
-			cin>>it->second;
+			it->first=newName;
 			p=1;
 			break;
 		}
@@ -64,12 +89,36 @@ void manage :: renameFolder(node *root, string oldFolderName)
 {
 	vector<pair<node*, string> > :: iterator it;
 	int p=0;
+	string newName;
+	cout<<"Enter new name: ";
+	cin>>newName;
+	bool a=false;
+	while(a==false)
+	{
+		for(it=root->folder.begin();it!=root->folder.end();++it)
+		{
+			if(it->second== newName)
+			{
+				cout<<"Folder with that name already exist"<<endl;
+				a=true;
+				break;
+			}
+		}
+		if(a==true)
+		{
+			cout<<"Re-enter folder name: ";
+			cin>>newName;
+		}
+		else
+		{
+			a=false;
+		}
+	}
 	for(it=root->folder.begin();it!=root->folder.end();++it)
 	{
-		if(it->first==oldFolderName)
+		if(it->second==oldFolderName)
 		{
-			cout<<"Enter new name: ";
-			cin>>it->second;
+			it->second= newName;
 			p=1;
 			break;
 		}
@@ -77,4 +126,90 @@ void manage :: renameFolder(node *root, string oldFolderName)
 	if(p==0)
 		cout<<"folder doesnt exist"<<endl;
 }
-#endif // MANAGE_H
+void manage :: list(node * root)
+{
+	vector<pair<string, string> > :: iterator it;
+	vector<pair<node*, string> > :: iterator i;
+	for(it=root->file.begin(); it!=root->file.end(); ++it)
+	{
+		cout<<it->first<<"."<<it->second<<endl;
+	}
+	for(i=root->folder.begin(); i!=root->folder.end(); ++i)
+	{
+		cout << "\033[1;31m";
+		cout<<i->second<<endl;
+		cout<<"\033[0m";
+	}
+}
+void manage :: traverse(node *root)
+{
+	vector<node *>path;
+	vector<string>p;
+	node * curr = root;
+	while(1)
+	{
+		vector<string> :: iterator a;
+		path.push_back(curr);
+		cout<<"******************************************************************************************"<<endl;
+		for(a=p.begin();a!=p.end();++a)
+		{
+			cout<<*a<<"->";
+		}
+		cout<<"******************************************************************************************"<<endl;
+		list(curr);
+		cout<<endl<<endl<<endl<<endl<<endl<<endl;
+			string temp;
+			cout<<"Enter file name to open or folder name to enter in it: ";
+			cin>>temp;
+			vector<pair<string, string> > :: iterator it;
+			vector<pair<node*, string> > :: iterator i;
+			if(checkFile(curr, temp))
+			{
+				for(it=curr->file.begin(); it!=curr->file.end(); ++it)
+				{
+					if(temp==it->first)
+					{
+						//openFile(it->first, it->second);
+					}
+				}
+			}
+			else if(checkFolder(curr,temp))
+			{
+				for(i=curr->folder.begin(); i!=curr->folder.end(); ++i)
+				{
+					if(temp==i->second)
+						curr=i->first;
+					p.push_back(temp);
+				}
+			}
+			else
+				cout<<"doesnt exist"<<endl;
+
+	}
+
+}
+bool manage :: checkFile(node * root, string name)
+{
+	vector<pair<string, string> > :: iterator it;
+	for(it=root->file.begin();it!=root->file.end();++it)
+	{
+		if(it->first==name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool manage :: checkFolder(node * root, string name)
+{
+	vector<pair<node*, string> > :: iterator it;
+	for(it=root->folder.begin();it!=root->folder.end();++it)
+	{
+		if(it->second==name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+#endif // MANAGE_Hz
