@@ -24,8 +24,7 @@ class manage
         }
         bool checkFile(node * root, string name);
         bool checkFolder(node * root, string name);
-        
-
+        void help();
     protected:
 
     private:
@@ -211,5 +210,15 @@ bool manage :: checkFolder(node * root, string name)
 		}
 	}
 	return false;
+}
+void manage :: help()
+{
+	map<string, string>h;
+	map<string, string> :: iterator it;
+	cout<<"Command and their functionality are as follows: "<<endl;
+	for(it=h.begin();it!=h.end();it++)
+	{
+		cout<<it->first<<" :-> "<<it->second<<endl;
+	}
 }
 #endif // MANAGE_Hz
