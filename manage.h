@@ -1,6 +1,8 @@
 #ifndef MANAGE_H
 #define MANAGE_H
 #include<bits/stdc++.h>
+#include "file.h"
+#include "sql.h"
 #include<string.h>
 using namespace std;
 struct node
@@ -18,16 +20,15 @@ class manage
         void createFolder(string folderName, node *root);
         void list(node *root);
         void traverse(node * root);
-        void actions()
-        {
-        	cout<<"Create File\tCreate Folder\tRename File\t Rename Folder";
-        }
+        void actions();
         bool checkFile(node * root, string name);
         bool checkFolder(node * root, string name);
         void help();
     protected:
 
     private:
+    	file obj;
+    	sql obj1;
     	
 
     		
@@ -35,6 +36,8 @@ class manage
 void manage :: createFile(string fileName, string fileExtension, node *root)
 {
 	root->file.push_back(make_pair(fileName,fileExtension));
+	cout<<"Enter file conytent"<<endl;
+	string temp=obj.inputFile();
 }
 void manage :: createFolder(string folderName, node *root)
 {
@@ -220,5 +223,9 @@ void manage :: help()
 	{
 		cout<<it->first<<" :-> "<<it->second<<endl;
 	}
+}
+void manage :: actions()
+{
+	cout<<"Create File\tCreate Folder\tRename File\t Rename Folder";    
 }
 #endif // MANAGE_Hz
