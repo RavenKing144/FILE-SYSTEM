@@ -12,11 +12,13 @@ class file
         void openFile(string  temp);
         string append(string temp);
         string edit(string temp);
-        string copyPaste(string temp);
-        string cutPaste(string temp);
+        string copy(string temp);
+        string cut(string temp);
+        string paste(string str);
     protected:
 
     private:
+    	vector<string>cutCopy;
 };
 
 string file :: inputFile()
@@ -112,6 +114,175 @@ string file :: edit(string str)
 	cin>>abc[y][y1];
 	//
 	x=0;
+	for(it=abc.begin(); it!=abc.end();it++)
+	{
+		vector<string> temp= *it;
+		vector<string> :: iterator i;
+		for(i=temp.begin(); i!=temp.end(); i++)
+		{
+			str+=*i;
+			str+=" ";
+		}
+		str+="-+=";
+	}
+	return str;
+}
+string file :: copy(string str)
+{
+	vector<vector<string> >abc;
+	vector<string >a;
+	string c="-+=";
+	size_t found = str.find(c); 
+	int i=0,j=0;
+	while(found != string::npos)
+	{
+		string temp=str.substr(j,found);
+		size_t f= temp.find(" ");
+		int k=0,l=0;
+		while(f != string::npos)
+		{
+			a.push_back(temp.substr(l,f));
+			l=f+1;
+			k++;
+			f=temp.find(" ",f+i);
+		}
+		abc.push_back(a);
+		j=found+1;
+		i++;
+		found=str.find(c,found+i);
+	}	
+	vector<vector<string> > :: iterator it;
+	int x=0;
+	for(it=abc.begin(); it!=abc.end();it++)
+	{
+		vector<string> temp= *it;
+		vector<string> :: iterator i;
+		cout<<x<<"->";
+		for(i=temp.begin(); i!=temp.end(); i++)
+		{
+			cout<<*i<<" ";
+		}
+		cout<<endl;
+		x++;
+	}
+	x=0;
+	cout<<"Enter starting and ending line number :";
+	int y,y1;
+	cin>>y>>y1;
+	for(int i=y;i<=y1;i++)
+	{
+		cutCopy.insert(cutCopy.end(),abc[i].begin(),abc[i].end());
+	}	
+}
+string file :: cut(string str)
+{
+	vector<vector<string> >abc;
+	vector<string >a;
+	string c="-+=";
+	size_t found = str.find(c); 
+	int i=0,j=0;
+	while(found != string::npos)
+	{
+		string temp=str.substr(j,found);
+		size_t f= temp.find(" ");
+		int k=0,l=0;
+		while(f != string::npos)
+		{
+			a.push_back(temp.substr(l,f));
+			l=f+1;
+			k++;
+			f=temp.find(" ",f+i);
+		}
+		abc.push_back(a);
+		j=found+1;
+		i++;
+		found=str.find(c,found+i);
+	}	
+	vector<vector<string> > :: iterator it;
+	int x=0;
+	for(it=abc.begin(); it!=abc.end();it++)
+	{
+		vector<string> temp= *it;
+		vector<string> :: iterator i;
+		cout<<x<<"->";
+		for(i=temp.begin(); i!=temp.end(); i++)
+		{
+			cout<<*i<<" ";
+		}
+		cout<<endl;
+		x++;
+	}
+	x=0;
+	cout<<"Enter starting and ending line number :";
+	int y,y1;
+	cin>>y>>y1;
+	for(int i=y;i<=y1;i++)
+	{
+		cutCopy.insert(cutCopy.end(),abc[i].begin(),abc[i].end());
+		cutCopy.insert(cutCopy.end(),"-+=");
+	}	
+	for (int i=y; i<= y1; ++i)			
+	{
+		
+		abc.erase(abc.begin()+i);
+			
+	}
+	for(it=abc.begin(); it!=abc.end();it++)
+	{
+		vector<string> temp= *it;
+		vector<string> :: iterator i;
+		for(i=temp.begin(); i!=temp.end(); i++)
+		{
+			str+=*i;
+			str+=" ";
+		}
+		str+="-+=";
+	}
+	return str;
+}
+string file :: paste(string str)
+{
+	vector<vector<string> >abc;
+	vector<string >a;
+	string c="-+=";
+	size_t found = str.find(c); 
+	int i=0,j=0;
+	while(found != string::npos)
+	{
+		string temp=str.substr(j,found);
+		size_t f= temp.find(" ");
+		int k=0,l=0;
+		while(f != string::npos)
+		{
+			a.push_back(temp.substr(l,f));
+			l=f+1;
+			k++;
+			f=temp.find(" ",f+i);
+		}
+		abc.push_back(a);
+		j=found+1;
+		i++;
+		found=str.find(c,found+i);
+	}	
+	vector<vector<string> > :: iterator it;
+	int x=0;
+	for(it=abc.begin(); it!=abc.end();it++)
+	{
+		vector<string> temp= *it;
+		vector<string> :: iterator i;
+		cout<<x<<"->";
+		for(i=temp.begin(); i!=temp.end(); i++)
+		{
+			cout<<*i<<" ";
+		}
+		cout<<endl;
+		x++;
+	}
+	x=0;
+	cout<<"Enter starting line number :";
+	int y;
+	cin>>y;
+	abc[y+i].insert(abc[y+i].end(),cutCopy.begin(),cutCopy.end());
 	for(it=abc.begin(); it!=abc.end();it++)
 	{
 		vector<string> temp= *it;
