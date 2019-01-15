@@ -23,7 +23,11 @@ class manage
         void actions();
         bool checkFile(node * root, string name);
         bool checkFolder(node * root, string name);
-        void help();
+        bool conditions(node * root);
+        void cutfile(string source, string dest);
+        void cutfolder(string source, string dest);
+        void copyfile(string source, string dest);
+        void copyfolder(string source, string dest);
     protected:
 
     private:
@@ -150,14 +154,12 @@ void manage :: traverse(node *root)
 	node * curr = root;
 	while(1)
 	{
+		system("cls");
+		manage::actions();
+		cout<<endl<<endl<<endl<<endl<<endl<<endl;
+		cout<<endl<<endl<<endl<<endl<<endl<<endl;
 		vector<string> :: iterator a;
 		path.push_back(curr);
-		cout<<"******************************************************************************************"<<endl;
-		for(a=p.begin();a!=p.end();++a)
-		{
-			cout<<*a<<"->";
-		}
-		cout<<"******************************************************************************************"<<endl;
 		list(curr);
 		cout<<endl<<endl<<endl<<endl<<endl<<endl;
 			string temp;
@@ -171,7 +173,7 @@ void manage :: traverse(node *root)
 				{
 					if(temp==it->first)
 					{
-						//openFile(it->first, it->second);
+						//sql query
 					}
 				}
 			}
@@ -186,6 +188,12 @@ void manage :: traverse(node *root)
 			}
 			else
 				cout<<"doesnt exist"<<endl;
+		cout<<"******************************************************************************************"<<endl;
+		for(a=p.begin();a!=p.end();++a)
+		{
+			cout<<*a<<"->";
+		}
+		cout<<"******************************************************************************************"<<endl;
 
 	}
 
@@ -214,18 +222,137 @@ bool manage :: checkFolder(node * root, string name)
 	}
 	return false;
 }
-void manage :: help()
-{
-	map<string, string>h;
-	map<string, string> :: iterator it;
-	cout<<"Command and their functionality are as follows: "<<endl;
-	for(it=h.begin();it!=h.end();it++)
-	{
-		cout<<it->first<<" :-> "<<it->second<<endl;
-	}
-}
 void manage :: actions()
 {
-	cout<<"Create File\tCreate Folder\tRename File\t Rename Folder";    
+	cout<<"Create File -> touch\tCreate Folder -> mkdir\tRename File -> rename\t Rename Folder -> frename\tTerminate -> close"<<endl;
+	cout<<"Cut File -> mv\tCut Folder -> fmv\t Copy File -> cp\t Copy Folder -> fcp\t Delete File -> rm\t Delete Folder -> frm"<<endl;
+	cout<<"list all file and folder -> ls\t"  ; 
+}
+bool manage :: conditions(node * root)
+{
+	cout<<"Enter command: ";
+	string command;
+	cin>>command;
+	vector<string>parts;
+	int i=0,j=0;
+	while(i<sizeof(command))
+	{
+		string temp;
+		if(command[i]!=32)
+			temp+=command[i];
+		else
+		{
+			parts.push_back(temp);
+			temp="";
+			j++;
+		}
+		i++;
+	}
+	if(j>3)
+	{
+		cout<<"invalid command"<<endl;
+		return false;
+	}
+	if(parts[0]=="touch")
+	{
+		string a;
+		cout<<"Enter file name and extension seprated by '.' ";
+		cin>>a;
+		string c,b;
+		size_t found = a.find(".");
+		c=a.substr(0,found);
+		b=a.substr(found+1,sizeof(a));
+		createFile(c,b,root);
+	}
+	if(parts[0]=="mkdir")
+	{
+		string a;
+		cout<<"Enter folder name ";
+		cin>>a;
+		createFolder(a,root);
+	}
+	if(parts[0]=="rename")
+	{
+		string a;
+		cout<<"Enter file name and extension seprated by '.' ";
+		cin>>a;
+		string c,b;
+		size_t found = a.find(".");
+		c=a.substr(0,found);
+		b=a.substr(found+1,sizeof(a));
+		renameFile(root,c,b);
+
+	}
+	if(parts[0]=="frename")
+	{
+		string a;
+		cout<<"Enter folder name ";
+		cin>>a;
+		renameFolder(root,a);
+	}
+	if(parts[0]=="ls")
+	{
+		list(root);
+	}
+	if(parts[0]=="close")
+	{
+		exit(0);
+	}
+	if(parts[0]=="mv")
+	{
+		
+	}
+	if(parts[0]=="fmv")
+	{
+		
+	}
+	if(parts[0]=="cp")
+	{
+		
+	}
+	if(parts[0]=="fcp")
+	{
+		
+	}
+	if(parts[0]=="rm")
+	{
+		string a;
+		cout<<"Enter file name and extension seprated by '.' ";
+		cin>>a;
+		string c,b;
+		size_t found = a.find(".");
+		c=a.substr(0,found);
+		b=a.substr(found+1,sizeof(a));
+		int i=0;
+		vector<pair<string, string> > :: iterator it;
+		for(it=root->file.begin();it!=root->file.end();it++)
+		{
+			if(it->first==c && it->second==b)
+			{
+				root->file.erase(root->file.begin()+i+1);
+				break;
+			}
+			else
+				i++;
+		}
+	}
+	if(parts[0]=="frm")
+	{
+		string a;
+		cout<<"Enter folder name ";
+		cin>>a;
+		int i=0;
+		vector<pair<node *, string> > :: iterator it;
+		for(it=root->folder.begin();it!=root->folder.end();it++)
+		{
+			if(it->second==a)
+			{
+				root->folder.erase(root->folder.begin()+i+1);
+				break;
+			}
+			else
+				i++;
+		}
+	}
 }
 #endif // MANAGE_Hz
